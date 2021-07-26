@@ -2,14 +2,17 @@ require 'rails_helper'
 
 RSpec.describe 'Measurements Routes', type: :request do
   # Initialize test data
-  let!(:measurements){ create_list(:measurement, 20) }
+
+  # create_list method is a factory_bot gem method to generate dummy test data
+  # factory_bot is setup in ./spec/factories/measurements.rb
+  let!(:measurements) { create_list(:measurement, 20) }
 
   # Test suite for the POST /measurements route
   describe 'POST /measurements' do
     let(:measurement) { { platform: 'Twitter', time_spent: 45 } }
 
     context 'The request is valid' do
-      before { post '/measurements', params: measurement }
+      before { post '/measurements', params: measurements }
 
       it 'Should return status 201' do
         expect(response).to_have_http_status(201)
@@ -23,14 +26,14 @@ RSpec.describe 'Measurements Routes', type: :request do
 
   # Test suite for the GET /measurements route
   describe 'GET /measurements' do
-    before {get '/measurements'}
+    before { get '/measurements' }
 
-    it "Should return status 200" do
+    it 'Should return status 200' do
       expect(response).to_have_http_status(200)
     end
 
-    it "Should return a data array" do
+    it 'Should return a data array' do
       expect(response.body.data.length).to_eq(20)
     end
-  end 
+  end
 end
