@@ -1,10 +1,19 @@
 class MeasurementsController < ApplicationController
   rescue_from ActiveRecord::RecordNotSaved, with: :not_saved
+  rescue_from StandardError, with: :not_saved
   # To Do: Handle Unauthorized personnel
 
   def create
     @measurement = Measurement.create!(meas_data)
-    render json: { status: :created, data: measurement }, status: :created
+    render json: {
+      status: :created,
+      data: {
+        twitter: @measurement.twitter,
+        instagram: @measurement.instagram,
+        tiktok: @measurement.tiktok,
+        other: @measurement.other
+      }
+    }, status: :created
   end
 
   def index
@@ -21,29 +30,31 @@ class MeasurementsController < ApplicationController
 
   # Calculate the total time spent on all social medias
   def calculate_total_time_spent
-    meas_params.twitter + meas_params.instagram + meas_params.tiktok + meas_params.other
+    params = meas_params
+    Integer(params['twitter']) + Integer(params['instagram']) + Integer(params['tiktok']) + Integer(params['other'])
   end
 
   # Calculate the progress made by the user today compared to yesterday
   def calculate_progress
-    previous_day = Date.now - 1.day
+    previous_day = Date.yesterday
     previous_day_data = Measurement.where('created_at = ?', previous_day)
-    previous_day_data.any ? calculate_total_time_spent - previous_day_data.total_time_spent : 0
+    previous_day_data.to_a.any? ? calculate_total_time_spent - previous_day_data.total_time_spent : 0
   end
 
   # This hash is to be saved as it has all the required fields the Measurement model expects
   def meas_data
+    params = meas_params
     {
-      twitter: meas_params.twitter,
-      instagram: meas_params.instagram,
-      tiktok: meas_params.tiktok,
-      other: meas_params.other,
+      twitter: params['twitter'],
+      instagram: params['instagram'],
+      tiktok: params['tiktok'],
+      other: params['other'],
       total_time_spent: calculate_total_time_spent,
       progress: calculate_progress
     }
   end
 
   def not_saved
-    render json: { status: :bad_request, message: 'Verify your input data and try again' }
+    render json: { status: :bad_request, message: 'Verify your input data and try again' }, status: :bad_request
   end
 end

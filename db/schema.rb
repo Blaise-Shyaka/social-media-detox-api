@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_07_044939) do
+ActiveRecord::Schema.define(version: 2021_07_27_000019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,10 +18,10 @@ ActiveRecord::Schema.define(version: 2021_07_07_044939) do
   create_table "measurements", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "twitter"
-    t.string "instagram"
-    t.string "tiktok"
-    t.string "other"
+    t.integer "twitter"
+    t.integer "instagram"
+    t.integer "tiktok"
+    t.integer "other"
     t.integer "total_time_spent"
     t.integer "progress"
   end
