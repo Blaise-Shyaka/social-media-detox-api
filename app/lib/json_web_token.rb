@@ -1,6 +1,5 @@
 # This class will be used to encode and decode users's passwords based on a secret key
 class JsonWebToken
-
   # Each rails application has a unique ID. We will use it as our secret key
   SECRET_KEY = Rails.application.secrets.secret_key_base
 
@@ -17,8 +16,6 @@ class JsonWebToken
 
     # It enables to access hash properties using both a symbol Hash[:prop] and a Hash['prop']
     HashWithIndifferentAccess.new body
-  end
-
   rescue JWT::DecodeError => e
     raise ExceptionHandler::InvalidToken, e.message
   end
