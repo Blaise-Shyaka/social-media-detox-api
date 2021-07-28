@@ -5,6 +5,7 @@ RSpec.describe 'Measurements Routes', type: :request do
 
   # create_list method is a factory_bot gem method to generate dummy test data
   # factory_bot is setup in ./spec/factories/measurements.rb
+  let!(:users) { create_list(:user, 1) }
   let!(:measurements) { create_list(:measurement, 20) }
 
   # Test suite for the POST /measurements route
