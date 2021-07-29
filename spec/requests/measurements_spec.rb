@@ -5,8 +5,8 @@ RSpec.describe 'Measurements Routes', type: :request do
 
   # create_list method is a factory_bot gem method to generate dummy test data
   # factory_bot is setup in ./spec/factories/measurements.rb
-  let!(:users) { create_list(:user, 1) }
-  let!(:measurements) { create_list(:measurement, 20) }
+  let!(:user) { create(:user) }
+  let!(:measurements) { create_list(:measurement, 20, user_id: user.id) }
 
   # Test suite for the POST /measurements route
   describe 'POST /measurements' do
@@ -16,18 +16,20 @@ RSpec.describe 'Measurements Routes', type: :request do
         instagram: 40,
         tiktok: 58,
         other: 46
-      }
+      }.to_json
     end
 
     let(:invalid_measurement) do
       {
         twitter: 69,
         progress: 10
-      }
+      }.to_json
     end
 
+    let(:headers) { valid_headers }
+
     context 'The request is valid' do
-      before { post '/measurements', params: valid_measurement }
+      before { post '/measurements', params: valid_measurement, headers: headers }
 
       it 'Should return status 201' do
         expect(response).to have_http_status(201)
@@ -35,31 +37,39 @@ RSpec.describe 'Measurements Routes', type: :request do
 
       it 'Should return the right message' do
         data = JSON.parse(response.body)['data']
+        parsed_valid_measurement = JSON.parse(valid_measurement)
 
-        expect(data['twitter']).to eq(valid_measurement[:twitter])
-        expect(data['instagram']).to eq(valid_measurement[:instagram])
-        expect(data['tiktok']).to eq(valid_measurement[:tiktok])
-        expect(data['other']).to eq(valid_measurement[:other])
+        expect(data['twitter']).to eq(parsed_valid_measurement['twitter'])
+        expect(data['instagram']).to eq(parsed_valid_measurement['instagram'])
+        expect(data['tiktok']).to eq(parsed_valid_measurement['tiktok'])
+        expect(data['other']).to eq(parsed_valid_measurement['other'])
       end
     end
 
     context 'The request is invalid' do
-      before { post '/measurements', params: invalid_measurement }
+      before { post '/measurements', params: invalid_measurement, headers: headers }
 
       it 'Should return 400 status code' do
-        expect(response).to have_http_status(400)
+        expect(response).to have_http_status(422)
       end
 
       it 'Should return "Verify your input data and try again" message' do
         message = JSON.parse(response.body)['message']
-        expect(message).to eq('Verify your input data and try again')
+        # rubocop:disable Layout/LineLength
+        expect(message)
+          .to eq(
+            "Validation failed: Instagram can't be blank, Tiktok can't be blank, Other can't be blank, Total time spent can't be blank"
+          )
+        # rubocop:enable Layout/LineLength
       end
     end
   end
 
   # Test suite for the GET /measurements route
   describe 'GET /measurements' do
-    before { get '/measurements' }
+    let(:headers) { valid_headers }
+
+    before { get '/measurements', headers: headers }
 
     it 'Should return status 200' do
       expect(response).to have_http_status(200)

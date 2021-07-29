@@ -1,8 +1,4 @@
 class MeasurementsController < ApplicationController
-  rescue_from ActiveRecord::RecordNotSaved, with: :not_saved
-  rescue_from StandardError, with: :not_saved
-  # To Do: Handle Unauthorized personnel
-
   def create
     @measurement = Measurement.create!(meas_data)
     render json: {
@@ -32,6 +28,7 @@ class MeasurementsController < ApplicationController
   def calculate_total_time_spent
     params = meas_params
     Integer(params['twitter']) + Integer(params['instagram']) + Integer(params['tiktok']) + Integer(params['other'])
+  rescue TypeError
   end
 
   # Calculate the progress made by the user today compared to yesterday
@@ -50,7 +47,8 @@ class MeasurementsController < ApplicationController
       tiktok: params['tiktok'],
       other: params['other'],
       total_time_spent: calculate_total_time_spent,
-      progress: calculate_progress
+      progress: calculate_progress,
+      user: current_user
     }
   end
 

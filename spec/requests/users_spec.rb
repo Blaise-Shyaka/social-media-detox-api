@@ -18,7 +18,6 @@ RSpec.describe 'Users API', type: :request do
 
       it 'returns success message' do
         result = JSON.parse(response.body)['data']
-        p result
         expect(result['message']).to match(/Account created successfully/)
       end
 
