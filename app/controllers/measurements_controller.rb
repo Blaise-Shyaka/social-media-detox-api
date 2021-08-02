@@ -33,9 +33,9 @@ class MeasurementsController < ApplicationController
 
   # Calculate the progress made by the user today compared to yesterday
   def calculate_progress
-    previous_day = Date.yesterday
-    previous_day_data = Measurement.where('created_at = ?', previous_day)
-    previous_day_data.to_a.any? ? calculate_total_time_spent - previous_day_data.total_time_spent : 0
+    previous_day = Date.today-1
+    previous_day_data = Measurement.where('DATE(created_at) = ? AND user_id = ?', previous_day, @current_user.id)
+    previous_day_data.to_a.any? ? calculate_total_time_spent - previous_day_data.to_a.last.total_time_spent : 0
   end
 
   # This hash is to be saved as it has all the required fields the Measurement model expects
