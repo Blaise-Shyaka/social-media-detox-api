@@ -9,7 +9,7 @@ This project is an API for a Social-Media-Detox app. The Social-Media-Detox app 
 
 ## Live Demo
 
-[Live demo link]()
+[Live demo link](https://social-media-detox-api.herokuapp.com/)
 
 ## Getting Started
 
@@ -59,7 +59,7 @@ Setup database with:
 
 ### Usage
 
-- To create an account, `POST /signup`. The request of the format is as follows:
+- To create an account, `POST https://social-media-detox-api.herokuapp.com/signup`. The request of the format is as follows:
 ```JSON
 {
   "first_name": "test first name",
@@ -70,7 +70,7 @@ Setup database with:
 }
 ```
 
-- To login, `POST /auth/login`. Format:
+- To login, `POST https://social-media-detox-api.herokuapp.com/auth/login`. Format:
 ```JSON
 {
   "email": "test@email.com",
@@ -78,7 +78,7 @@ Setup database with:
 }
 ```
 
-- To record the time spent on social media, `POST /measurements`. Format:
+- To record the time spent on social media, `POST https://social-media-detox-api.herokuapp.com/measurements`. Format:
 ```JSON
 {
   "twitter": 23,
