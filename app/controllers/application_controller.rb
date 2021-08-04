@@ -6,8 +6,6 @@ class ApplicationController < ActionController::API
   attr_reader :current_user
 
   def cors_preflight_check
-    return unless request.method == :options
-
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
     headers['Access-Control-Allow-Headers'] = '*'
