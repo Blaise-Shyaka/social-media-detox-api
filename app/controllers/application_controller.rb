@@ -1,7 +1,8 @@
 class ApplicationController < ActionController::API
   include ExceptionHandler
 
-  before_action :authorize_request, :cors_preflight_check
+  before_action :authorize_request
+  before_action :cors_preflight_check
   after_action :cors_set_access_control_headers
   attr_reader :current_user
 
