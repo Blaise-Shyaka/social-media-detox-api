@@ -35,7 +35,8 @@ class MeasurementsController < ApplicationController
   def calculate_progress
     previous_day = Date.today - 1
     previous_day_data = Measurement.where('DATE(created_at) = ?', previous_day)
-    previous_day_data.to_a.any? && !calculate_total_time_spent.nil? ? calculate_total_time_spent - previous_day_data.to_a.last.total_time_spent : 0
+    valid_operands = previous_day_data.to_a.any? && !calculate_total_time_spent.nil?
+    valid_operands ? calculate_total_time_spent - previous_day_data.to_a.last.total_time_spent : 0
   end
 
   # This hash is to be saved as it has all the required fields the Measurement model expects

@@ -6,12 +6,12 @@ class ApplicationController < ActionController::API
   attr_reader :current_user
 
   def cors_preflight_check
-    if request.method == :options
-      headers['Access-Control-Allow-Origin'] = '*'
-      headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
-      headers['Access-Control-Allow-Headers'] = '*'
-      headers['Access-Control-Request-Method'] = '*'
-    end
+    return unless request.method == :options
+
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE, OPTIONS'
+    headers['Access-Control-Allow-Headers'] = '*'
+    headers['Access-Control-Request-Method'] = '*'
   end
 
   def cors_set_access_control_headers
