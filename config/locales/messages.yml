@@ -1,0 +1,5 @@
+# In this file, I define messages to send to users when a request succeeds of fails.
+
+en:
+  messages:
+    measurement_created_message: 'Time spent on social media successfully recorded'
