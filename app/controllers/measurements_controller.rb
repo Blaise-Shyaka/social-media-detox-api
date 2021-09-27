@@ -13,7 +13,7 @@ class MeasurementsController < ApplicationController
   end
 
   def index
-    @measurements = Measurement.all
+    @measurements = current_user.measurements
     render json: { status: :ok, data: @measurements }, status: :ok
   end
 
@@ -34,7 +34,7 @@ class MeasurementsController < ApplicationController
   # Calculate the progress made by the user today compared to yesterday
   def calculate_progress
     previous_day = Date.today - 1
-    previous_day_data = Measurement.where('DATE(created_at) = ?', previous_day)
+    previous_day_data = current_user.measurements.where('DATE(created_at) = ?', previous_day)
     valid_operands = previous_day_data.to_a.any? && !calculate_total_time_spent.nil?
     valid_operands ? calculate_total_time_spent - previous_day_data.to_a.last.total_time_spent : 0
   end
